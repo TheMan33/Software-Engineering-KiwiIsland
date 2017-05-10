@@ -13,9 +13,18 @@ import GameModel.Player;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -38,6 +47,57 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
         
         setAsGameListener();
         initComponents();
+        
+        initialiseKeyBindings();
+        
+        setUpLists();
+        
+        txtPlayerName.setEditable(false);
+        initIslandGrid();
+        update();
+        pnlIsland.setFocusable(true);
+        pnlIsland.requestFocusInWindow();
+        
+        txtPlayerName.setText(name);
+    }
+    
+    public void initialiseKeyBindings(){
+        Action upAction = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Up pressed");
+                game.playerMove(MoveDirection.NORTH);
+            }
+        };
+        Action downAction = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.playerMove(MoveDirection.SOUTH);
+            }
+        };
+        Action leftAction = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.playerMove(MoveDirection.WEST);
+            }
+        };
+        Action rightAction = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.playerMove(MoveDirection.EAST);
+            }
+        };
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"), "upPressed");
+        this.getActionMap().put("upPressed", upAction);
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"), "downPressed");
+        this.getActionMap().put("downPressed", downAction);
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"), "leftPressed");
+        this.getActionMap().put("leftPressed", leftAction);
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"), "rightPressed");
+        this.getActionMap().put("rightPressed", rightAction);
+    }
+    
+    public void setUpLists(){
         listInventory.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listInventory.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -52,10 +112,6 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
             }
         });
         listObjects.setVisibleRowCount(20);
-        txtPlayerName.setEditable(false);
-        initIslandGrid();
-        update();
-        txtPlayerName.setText(name);
     }
 
     @Override
@@ -71,6 +127,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
                     game.getLoseMessage(), "Game over!",
                     JOptionPane.INFORMATION_MESSAGE);
             game.createNewGame();
+            frame.requestFocus();
         }
         else if ( game.getState() == GameState.WON )
         {
@@ -79,6 +136,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
                     game.getWinMessage(), "Well Done!",
                     JOptionPane.INFORMATION_MESSAGE);
             game.createNewGame();
+            frame.requestFocus();
         }
         else if (game.messageForPlayer())
         {
@@ -86,6 +144,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
                     this, 
                     game.getPlayerMessage(), "Important Information",
                     JOptionPane.INFORMATION_MESSAGE);   
+            frame.requestFocus();
         }
     }
     
@@ -138,7 +197,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
         btnMoveNorth.setEnabled(game.isPlayerMovePossible(MoveDirection.NORTH));
         btnMoveEast.setEnabled( game.isPlayerMovePossible(MoveDirection.EAST));
         btnMoveSouth.setEnabled(game.isPlayerMovePossible(MoveDirection.SOUTH));
-        btnMoveEast.setEnabled( game.isPlayerMovePossible(MoveDirection.WEST));
+        btnMoveWest.setEnabled( game.isPlayerMovePossible(MoveDirection.WEST));
     }
     
     /**
@@ -430,7 +489,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
         });
 
         jLabel7.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jLabel7.setText("Kiwis counted:");
+        jLabel7.setText("Kiwis caught:");
         jLabel7.setToolTipText("");
 
         txtKiwisCounted.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -482,12 +541,13 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
                         .addContainerGap()
                         .addComponent(pnlIsland, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(txtKiwisCounted)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel9)
-                                .addComponent(txtPredatorsLeft)))
+                                .addComponent(txtPredatorsLeft))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel7)
+                                .addComponent(txtKiwisCounted)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnMoveNorth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
@@ -601,6 +661,4 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JLabel txtPredatorsLeft;
     // End of variables declaration//GEN-END:variables
-//    listInventory = new JList();
-//    listObjects = new JList();
 }
