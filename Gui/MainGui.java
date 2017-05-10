@@ -559,35 +559,43 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
 
     private void btnUseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUseActionPerformed
         game.useItem( listInventory.getSelectedValue());
+        frame.requestFocus();
     }//GEN-LAST:event_btnUseActionPerformed
 
     private void btnMoveNorthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveNorthActionPerformed
         game.playerMove(MoveDirection.NORTH);
+        frame.requestFocus();
     }//GEN-LAST:event_btnMoveNorthActionPerformed
 
     private void btnMoveWestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveWestActionPerformed
         game.playerMove(MoveDirection.WEST);
+        frame.requestFocus();
     }//GEN-LAST:event_btnMoveWestActionPerformed
 
     private void btnMoveEastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveEastActionPerformed
         game.playerMove(MoveDirection.EAST);
+        frame.requestFocus();
     }//GEN-LAST:event_btnMoveEastActionPerformed
 
     private void btnMoveSouthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveSouthActionPerformed
         game.playerMove(MoveDirection.SOUTH);
+        frame.requestFocus();
     }//GEN-LAST:event_btnMoveSouthActionPerformed
 
     private void btnDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropActionPerformed
         game.dropItem(listInventory.getSelectedValue());
+        frame.requestFocus();
     }//GEN-LAST:event_btnDropActionPerformed
 
     private void btnCountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCountActionPerformed
         game.countKiwi();
+        frame.requestFocus();
     }//GEN-LAST:event_btnCountActionPerformed
 
     private void btnCollectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCollectActionPerformed
         Object obj = listObjects.getSelectedValue();
         game.collectItem(obj);
+        frame.requestFocus();
     }//GEN-LAST:event_btnCollectActionPerformed
 
     private void listObjectsValueChanged(javax.swing.event.ListSelectionEvent evt) {                                         
@@ -598,6 +606,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
             btnCount.setEnabled(game.canCount(occ));
             listObjects.setToolTipText(game.getOccupantDescription(occ));
         }
+        frame.requestFocus();
     } 
     
     private void listInventoryValueChanged(javax.swing.event.ListSelectionEvent evt) {                                           
@@ -608,6 +617,7 @@ public class MainGui extends javax.swing.JPanel implements GameEventListener {
             btnUse.setEnabled(game.canUse(item));
             listInventory.setToolTipText(game.getOccupantDescription(item));
         }
+        frame.requestFocus();
     }
     
     private void initIslandGrid()
